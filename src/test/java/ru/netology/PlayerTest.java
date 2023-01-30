@@ -11,6 +11,7 @@ public class PlayerTest {
     // (здесь вообще пустой метод). Методы play и sumGenre вроде работают более-менее.
     // Геттер getName вообще непонятно куда девать, вероятно придется вообще убрать.
     // Также в методе play требуется написать класс-исключение для RunTimeException
+    // В методе play также неверно считает сумму проигранных часов
 
     @Test
     public void shouldInstall() {
@@ -28,7 +29,6 @@ public class PlayerTest {
     public void shouldSumGenreIfOneGame() {
         GameStore store = new GameStore();
         Game game = store.publishGame("Нетология Баттл Онлайн", "Аркады");
-
         Player player = new Player("Petya");
         player.installGame(game);
         player.play(game, 3);
@@ -110,6 +110,16 @@ public class PlayerTest {
         player.installGame(game);
         int expected = 3;
         int actual = player.play(game,3);
+        assertEquals(expected,actual);
+    }
+    @Test
+    public void shouldPlayIfPlayedTwice() {
+        GameStore store = new GameStore();
+        Game game = store.publishGame("PUBG Онлайн", "Шутеры");
+        Player player = new Player("Anya");
+        player.installGame(game);
+        int expected = 8;
+        int actual = player.play(game,3) + player.play(game, 5);
         assertEquals(expected,actual);
     }
     @Test
