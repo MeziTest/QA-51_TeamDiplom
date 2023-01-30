@@ -103,6 +103,16 @@ public class PlayerTest {
 
     }
     @Test
+    public void shouldNotPlay() {
+        GameStore store = new GameStore();
+        Game game = store.publishGame(null, null);
+        Player player = new Player("Anya");
+        player.installGame(game);
+        int expected = 0;
+        int actual = player.play(game,0);
+        assertEquals(expected,actual);
+    }
+    @Test
     public void shouldPlay() {
         GameStore store = new GameStore();
         Game game = store.publishGame("PUBG Онлайн", "Шутеры");
