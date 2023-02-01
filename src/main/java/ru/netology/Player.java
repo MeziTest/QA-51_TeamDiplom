@@ -6,6 +6,7 @@ import java.util.Map;
 public class Player {
     private String name;
 
+
     /** информация о том, в какую игру сколько часов было сыграно
     ключ - игра
     значение - суммарное количество часов игры в эту игру */
@@ -18,11 +19,16 @@ public class Player {
     public String getName() {
         return name;
     }
+    public Map<Game, Integer> getPlayedTime() {
+        return playedTime;
+    }
 
     /** добавление игры игроку
     если игра уже была, никаких изменений происходить не должно */
     public void installGame(Game game) {
-        playedTime.put(game, 0);
+        if (!playedTime.containsKey(game)) {
+            playedTime.put(game, 0);
+        }
     }
 
     /** игрок играет в игру game на протяжении hours часов
@@ -32,10 +38,12 @@ public class Player {
     если игра не была установлена, то надо выкидывать RuntimeException */
     public int play(Game game, int hours) {
         game.getStore().addPlayTime(name, hours);
-        if (playedTime.containsKey(game)) {
-            playedTime.put(game, playedTime.get(game));
+        if (hours < 0) {
+            throw new RuntimeException("Игровое время не может быть отрицательным!");
+        } else if (playedTime.containsKey(game)) {
+            playedTime.put(game, playedTime.get(game) + hours);
         } else {
-            playedTime.put(game, hours);
+            throw new RuntimeException("Игра " + game + "не установлена у игрока" + name);
         }
         return playedTime.get(game);
     }
@@ -47,8 +55,6 @@ public class Player {
         for (Game game : playedTime.keySet()) {
             if (game.getGenre().equals(genre)) {
                 sum += playedTime.get(game);
-            } else {
-                sum = 0;
             }
         }
         return sum;
@@ -56,7 +62,20 @@ public class Player {
 
     /** Метод принимает жанр и возвращает игру этого жанра, в которую играли больше всего
      Если в игры этого жанра не играли, возвращается null */
-    public Game mostPlayerByGenre(String genre) {
+    public String mostPlayerByGenre(String genre) {
+        int popularGenre = 0;
+        for (Game game: playedTime.keySet()) {
+            if (playedTime.get(game) <= 0) {
+                throw new RuntimeException("Игрок не сыграл ни в одну игру жанра " + game.getGenre());
+            } else if (game.getGenre().equals(genre) && playedTime.get(game) > popularGenre) {
+                popularGenre = playedTime.get(game);
+            }
+        }
+        for (Game item: playedTime.keySet()) {
+            if (popularGenre == playedTime.get(item)) {
+                return item.getTitle();
+            }
+        }
         return null;
     }
 }

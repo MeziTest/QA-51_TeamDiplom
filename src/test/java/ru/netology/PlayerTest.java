@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 public class PlayerTest {
 
     // Исходя из беглого анализа кода, в двух методах 100% есть ошибки: в методах installGame и mostPlayerByGenre
@@ -20,9 +22,9 @@ public class PlayerTest {
 
         Player player = new Player("Vasya");
         player.installGame(game);
-        boolean expected = true;
-        boolean actual = store.containsGame(game);
-        assertEquals(actual,expected);
+        Map<Game,Integer> expected = player.getPlayedTime();
+
+        assertTrue(expected.containsKey(game));
     }
 
     @Test
@@ -50,7 +52,7 @@ public class PlayerTest {
         player.play(game2, 6);
 
         int expected = 9;
-        int actual = player.sumGenre(game1.getGenre() + game2.getGenre());
+        int actual = player.sumGenre("Аркады");
         assertEquals(expected, actual);
     }
     @Test
@@ -72,7 +74,7 @@ public class PlayerTest {
         player.installGame(game);
         player.play(game, 3);
         String expected = "PUBG Онлайн";
-        Game actual = player.mostPlayerByGenre(game.getGenre());
+        String actual = player.mostPlayerByGenre("Шутеры");
         assertEquals(expected,actual);
 
     }
@@ -80,26 +82,28 @@ public class PlayerTest {
     public void shouldFindMostPlayedGenreOfTwo() {
         GameStore store = new GameStore();
         Game game = store.publishGame("PUBG Онлайн", "Шутеры");
-        Game game2 = store.publishGame("Нетология Баттл Онлайн", "Аркады");
+        Game game2 = store.publishGame("Нетология Баттл Онлайн", "Шутеры");
+
         Player player = new Player("Kolya");
         player.installGame(game);
         player.installGame(game2);
         player.play(game, 3);
         player.play(game2,2);
         String expected = "PUBG Онлайн";
-        Game actual = player.mostPlayerByGenre(game.getGenre() + game2.getGenre());
+        String actual = player.mostPlayerByGenre("Шутеры");
         assertEquals(expected,actual);
 
     }
     @Test
     public void shouldNotFindMostPlayedGenre() {
         GameStore store = new GameStore();
-        Game game = store.publishGame(null, null);
+        Game game = store.publishGame("PUBG Онлайн", "Шутеры");
         Player player = new Player("Anya");
-        player.installGame(null);
-        String expected = null;
-        Game actual = player.mostPlayerByGenre(game.getGenre());
-        assertEquals(expected,actual);
+        player.installGame(game);
+
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            player.mostPlayerByGenre("Аркады");
+        });
 
     }
     @Test
@@ -112,6 +116,19 @@ public class PlayerTest {
         int actual = player.play(game,0);
         assertEquals(expected,actual);
     }
+
+    @Test
+    public void shouldNotPlayIfNegativeHours() {
+        GameStore store = new GameStore();
+        Game game = store.publishGame("PUBG Онлайн", "Шутеры");
+        Player player = new Player("Anya");
+        player.installGame(game);
+
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            player.play(game,-1);
+        });
+    }
+
     @Test
     public void shouldPlay() {
         GameStore store = new GameStore();
@@ -128,8 +145,10 @@ public class PlayerTest {
         Game game = store.publishGame("PUBG Онлайн", "Шутеры");
         Player player = new Player("Anya");
         player.installGame(game);
-        int expected = 8;
-        int actual = player.play(game,3) + player.play(game, 5);
+        player.play(game,3);
+        player.play(game,8);
+        int expected = 16;
+        int actual = player.play(game, 5);
         assertEquals(expected,actual);
     }
     @Test

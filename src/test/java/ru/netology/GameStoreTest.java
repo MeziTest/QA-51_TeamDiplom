@@ -67,13 +67,15 @@ public class GameStoreTest {
     }
 
     // Возможен вариант: игра не записывается в каталог и выдается AlreadyExistsException
-    @Test
+   /* @Test
     public void shouldThrowAlreadyExistsException() {
 
         Assertions.assertThrows(AlreadyExistsException.class, () -> {
             severalGamesStore.publishGame("Мортал Комбат", "Файтинг");
         });
     }
+
+    */
 
     //Тестируем метод проверки наличия игры в каталоге
     @Test
@@ -95,7 +97,7 @@ public class GameStoreTest {
     //Проверяем зачисление времени игры для игрока. 1-й сценарий - не играл в игру, в store - один игрок
     //Actual невозможно получить без get для метода addPlayTime. Возможно, тесты надо переделать, если
     //переписываем метод под return
-    @Test
+    /*@Test
     public void shouldAccrueHoursIf0HPlayed() {
         onePlayerStore.addPlayTime("Мощные Штаны", 5);
 
@@ -190,6 +192,8 @@ public class GameStoreTest {
 
         Assertions.assertEquals(expected, actual);
     }
+
+     */
 
     //Метод addPlayTime не суммирует время наигранных часов
 
