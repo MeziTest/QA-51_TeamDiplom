@@ -22,7 +22,7 @@ public class PlayerTest {
 
         Player player = new Player("Vasya");
         player.installGame(game);
-        Map<Game,Integer> expected = player.getPlayedTime();
+        Map<Game, Integer> expected = player.getPlayedTime();
 
         assertTrue(expected.containsKey(game));
     }
@@ -39,6 +39,7 @@ public class PlayerTest {
         int actual = player.sumGenre(game.getGenre());
         assertEquals(expected, actual);
     }
+
     @Test
     public void shouldSumGenreIfTwoGames() {
         GameStore store = new GameStore();
@@ -55,6 +56,7 @@ public class PlayerTest {
         int actual = player.sumGenre("Аркады");
         assertEquals(expected, actual);
     }
+
     @Test
     public void shouldNotSumGenreIfZeroGames() {
         GameStore store = new GameStore();
@@ -66,6 +68,7 @@ public class PlayerTest {
         int actual = player.sumGenre(game.getGenre());
         assertEquals(expected, actual);
     }
+
     @Test
     public void shouldFindMostPlayedGenreOfOne() {
         GameStore store = new GameStore();
@@ -75,9 +78,10 @@ public class PlayerTest {
         player.play(game, 3);
         String expected = "PUBG Онлайн";
         String actual = player.mostPlayerByGenre("Шутеры");
-        assertEquals(expected,actual);
+        assertEquals(expected, actual);
 
     }
+
     @Test
     public void shouldFindMostPlayedGenreOfTwo() {
         GameStore store = new GameStore();
@@ -88,12 +92,13 @@ public class PlayerTest {
         player.installGame(game);
         player.installGame(game2);
         player.play(game, 3);
-        player.play(game2,2);
+        player.play(game2, 2);
         String expected = "PUBG Онлайн";
         String actual = player.mostPlayerByGenre("Шутеры");
-        assertEquals(expected,actual);
+        assertEquals(expected, actual);
 
     }
+
     @Test
     public void shouldNotFindMostPlayedGenre() {
         GameStore store = new GameStore();
@@ -106,6 +111,7 @@ public class PlayerTest {
         });
 
     }
+
     @Test
     public void shouldNotPlay() {
         GameStore store = new GameStore();
@@ -113,8 +119,8 @@ public class PlayerTest {
         Player player = new Player("Anya");
         player.installGame(game);
         int expected = 0;
-        int actual = player.play(game,0);
-        assertEquals(expected,actual);
+        int actual = player.play(game, 0);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -125,7 +131,7 @@ public class PlayerTest {
         player.installGame(game);
 
         Assertions.assertThrows(RuntimeException.class, () -> {
-            player.play(game,-1);
+            player.play(game, -1);
         });
     }
 
@@ -136,21 +142,23 @@ public class PlayerTest {
         Player player = new Player("Anya");
         player.installGame(game);
         int expected = 3;
-        int actual = player.play(game,3);
-        assertEquals(expected,actual);
+        int actual = player.play(game, 3);
+        assertEquals(expected, actual);
     }
+
     @Test
     public void shouldPlayIfPlayedTwice() {
         GameStore store = new GameStore();
         Game game = store.publishGame("PUBG Онлайн", "Шутеры");
         Player player = new Player("Anya");
         player.installGame(game);
-        player.play(game,3);
-        player.play(game,8);
+        player.play(game, 3);
+        player.play(game, 8);
         int expected = 16;
         int actual = player.play(game, 5);
-        assertEquals(expected,actual);
+        assertEquals(expected, actual);
     }
+
     @Test
     public void shouldCatchRuntimeExceptionInMethodPlay() {
         GameStore store = new GameStore();
@@ -158,7 +166,7 @@ public class PlayerTest {
         Player player = new Player("Petya");
 
         Assertions.assertThrows(RuntimeException.class, () -> {
-            player.play(game,3);
+            player.play(game, 3);
         });
     }
 

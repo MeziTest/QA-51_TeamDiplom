@@ -125,6 +125,7 @@ public class GameStoreTest {
 
         Assertions.assertEquals(expected, actual);
     }
+
     @Test
     public void shouldCatchRunTimeException() {
 

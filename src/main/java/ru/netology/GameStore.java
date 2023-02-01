@@ -53,11 +53,11 @@ public class GameStore {
                     "Отрицательное количество часов"
             );
         }
-            if (playedTime.containsKey(playerName)) {
-                playedTime.put(playerName, playedTime.get(playerName) + hours);
-            } else {
-                playedTime.put(playerName, hours);
-            }
+        if (playedTime.containsKey(playerName)) {
+            playedTime.put(playerName, playedTime.get(playerName) + hours);
+        } else {
+            playedTime.put(playerName, hours);
+        }
         return playedTime.get(playerName);
     }
 
