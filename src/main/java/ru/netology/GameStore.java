@@ -21,8 +21,14 @@ public class GameStore {
      */
     public Game publishGame(String title, String genre) {
         Game game = new Game(title, genre, this);
+        if (games.contains(game)) {
+            throw new AlreadyExistsException(
+                    "Игра " + title + " уже добавлена"
+            );
+        }
         games.add(game);
         return game;
+
     }
 
     /**
@@ -30,10 +36,8 @@ public class GameStore {
      * если игра есть и false иначе
      */
     public boolean containsGame(Game game) {
-        for (int i = 1; i < games.size(); i++) {
-            if (games.get(i - 1).equals(game)) {
-                return true;
-            }
+        if (games.contains(game)) {
+            return true;
         }
         return false;
     }
@@ -43,13 +47,20 @@ public class GameStore {
      * за игрой этого каталога. Игрок задаётся по имени. Время должно
      * суммироваться с прошлым значением для этого игрока
      */
-    public void addPlayTime(String playerName, int hours) {
-        if (playedTime.containsKey(playerName)) {
-            playedTime.put(playerName, playedTime.get(playerName));
-        } else {
-            playedTime.put(playerName, hours);
+    public int addPlayTime(String playerName, int hours) {
+        if (hours < 0) {
+            throw new RuntimeException(
+                    "Отрицательное количество часов"
+            );
         }
+            if (playedTime.containsKey(playerName)) {
+                playedTime.put(playerName, playedTime.get(playerName) + hours);
+            } else {
+                playedTime.put(playerName, hours);
+            }
+        return playedTime.get(playerName);
     }
+
 
     /**
      * Ищет имя игрока, который играл в игры этого каталога больше всего
@@ -73,6 +84,10 @@ public class GameStore {
      * за играми этого каталога
      */
     public int getSumPlayedTime() {
-        return 0;
+        int sum = 0;
+        for (int index : playedTime.values()) {
+            sum += index;
+        }
+        return sum;
     }
 }

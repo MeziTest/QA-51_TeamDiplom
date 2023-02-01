@@ -60,22 +60,12 @@ public class GameStoreTest {
     // Проверяем добавление уже существующей игры в каталог. Должна выдаваться либо одна игра с тестируемым
     //названием, либо ошибка
     @Test
-    public void shouldNotAddAlreadyExistentGame() {
-        Game game = severalGamesStore.publishGame("Ведьмак", "Экшен");
-
-        assertTrue(severalGamesStore.containsGame(game));
-    }
-
-    // Возможен вариант: игра не записывается в каталог и выдается AlreadyExistsException
-   /* @Test
     public void shouldThrowAlreadyExistsException() {
 
         Assertions.assertThrows(AlreadyExistsException.class, () -> {
             severalGamesStore.publishGame("Мортал Комбат", "Файтинг");
         });
     }
-
-    */
 
     //Тестируем метод проверки наличия игры в каталоге
     @Test
@@ -97,12 +87,11 @@ public class GameStoreTest {
     //Проверяем зачисление времени игры для игрока. 1-й сценарий - не играл в игру, в store - один игрок
     //Actual невозможно получить без get для метода addPlayTime. Возможно, тесты надо переделать, если
     //переписываем метод под return
-    /*@Test
+    @Test
     public void shouldAccrueHoursIf0HPlayed() {
-        onePlayerStore.addPlayTime("Мощные Штаны", 5);
 
         int expected = 5;
-        int actual = getPlayTime("Мощные Штаны");
+        int actual = onePlayerStore.addPlayTime("Мощные Штаны", 5);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -110,10 +99,9 @@ public class GameStoreTest {
     // 2-й сценарий - играл в игру 1 час (граничное значение), в store - несколько игроков
     @Test
     public void shouldAccrueHoursIf1HPlayed() {
-        severalGamesStore.addPlayTime("Мощные Штаны", 5);
 
         int expected = 6;
-        int actual = getPlayTime("Мощные Штаны");
+        int actual = severalGamesStore.addPlayTime("Мощные Штаны", 5);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -121,10 +109,9 @@ public class GameStoreTest {
     //3-й сценарий - играл в игру больше 1-го часа, в store - несколько игроков
     @Test
     public void shouldAccrueHours() {
-        severalGamesStore.addPlayTime("Старожил", 13);
 
         int expected = 70;
-        int actual = getPlayTime("Старожил");
+        int actual = severalGamesStore.addPlayTime("Старожил", 13);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -132,21 +119,26 @@ public class GameStoreTest {
     //Проверка зачисления времени в store для нового игрока (нет игроков в store)
     @Test
     public void shouldAccrueHoursNewPlayerEmptyPlayerStore() {
-        emptyStore.addPlayTime("Старожил", 2);
 
         int expected = 2;
-        int actual = getPlayTime("Старожил");
+        int actual = emptyStore.addPlayTime("Старожил", 2);
 
         Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    public void shouldCatchRunTimeException() {
+
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            emptyStore.addPlayTime("Старожил", -1);
+        });
     }
 
     //Проверка зачисления времени новому в store игроку (один игрок в store)
     @Test
     public void shouldAccrueHoursNewPlayerOnePlayerStore() {
-        emptyStore.addPlayTime("Разрушитель3000", 5);
 
         int expected = 5;
-        int actual = getPlayTime("Разрушитель3000");
+        int actual = onePlayerStore.addPlayTime("Разрушитель3000", 5);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -154,10 +146,9 @@ public class GameStoreTest {
     //Проверка зачисления времени новому в store игроку (несколько игроков в store)
     @Test
     public void shouldAccrueHoursNewPlayerSeveralPlayerStore() {
-        emptyStore.addPlayTime("Легенда", 10);
 
         int expected = 10;
-        int actual = getPlayTime("Легенда");
+        int actual = severalGamesStore.addPlayTime("Легенда", 10);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -192,8 +183,6 @@ public class GameStoreTest {
 
         Assertions.assertEquals(expected, actual);
     }
-
-     */
 
     //Метод addPlayTime не суммирует время наигранных часов
 
