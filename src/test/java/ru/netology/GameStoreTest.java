@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class GameStoreTest {
-
     GameStore emptyStore = new GameStore();
     GameStore oneGameStore = new GameStore();
     GameStore severalGamesStore = new GameStore();
@@ -60,8 +59,6 @@ public class GameStoreTest {
 
     // Проверяем добавление уже существующей игры в каталог. Должна выдаваться либо одна игра с тестируемым
     //названием, либо ошибка
-
-    // Возможен вариант: игра не записывается в каталог и выдается AlreadyExistsException
     @Test
     public void shouldThrowAlreadyExistsException() {
 
